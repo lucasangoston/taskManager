@@ -1,4 +1,4 @@
-package kernel;
+package kernel.query;
 
 public interface Query {
 }

@@ -1,6 +1,6 @@
 package application.command.create;
 
-import kernel.Command;
+import kernel.command.Command;
 
 public class createTask implements Command {
 }

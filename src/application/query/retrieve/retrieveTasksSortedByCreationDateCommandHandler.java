@@ -1,8 +1,7 @@
 package application.query.retrieve;
 
 import domain.model.Task;
-import kernel.Query;
-import kernel.QueryHandler;
+import kernel.query.QueryHandler;
 
 import java.util.List;
 

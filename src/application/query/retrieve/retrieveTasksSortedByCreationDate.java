@@ -1,6 +1,6 @@
 package application.query.retrieve;
 
-import kernel.Query;
+import kernel.query.Query;
 
 public class retrieveTasksSortedByCreationDate implements Query {
 }

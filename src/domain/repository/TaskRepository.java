@@ -4,26 +4,14 @@ import domain.model.Task;
 import kernel.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
-public class TaskRepository implements Repository<Task> {
+public interface TaskRepository extends Repository<Task> {
+    List<Task> getAll();
+    Task getById(UUID id);
+    void add(Task task);
 
-    @Override
-    public List<Task> getAll() {
-        return null;
-    }
+     void update(Task task);
 
-    @Override
-    public void add(Task task) {
-
-    }
-
-    @Override
-    public void update(Task task) {
-
-    }
-
-    @Override
-    public void delete(Task task) {
-
-    }
+     void delete(Task task);
 }
