@@ -1,7 +1,7 @@
-package infrastructure;
+package main.infrastructure;
 
-import domain.model.Task;
-import domain.repository.TaskRepository;
+import main.domain.model.Task;
+import main.domain.repository.TaskRepository;
 
 import java.util.List;
 import java.util.UUID;

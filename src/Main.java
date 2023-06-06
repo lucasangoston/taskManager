@@ -1,5 +1,8 @@
+import main.infrastructure.JsonFileHandler;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, world!");
+        JsonFileHandler jsonFileHandler = new JsonFileHandler();
+        System.out.println(jsonFileHandler.getTasks());
     }
 }

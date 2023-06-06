@@ -1,6 +1,6 @@
-package kernel;
+package main.kernel;
 
-import domain.model.Task;
+import main.domain.model.Task;
 
 import java.util.List;
 import java.util.UUID;

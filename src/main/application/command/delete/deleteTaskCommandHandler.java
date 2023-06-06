@@ -1,6 +1,6 @@
-package application.command.delete;
+package main.application.command.delete;
 
-import kernel.command.CommandHandler;
+import main.kernel.command.CommandHandler;
 
 public class deleteTaskCommandHandler implements CommandHandler<deleteTask> {
     @Override

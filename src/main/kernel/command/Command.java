@@ -1,4 +1,4 @@
-package kernel.command;
+package main.kernel.command;
 
 public interface Command {
 }

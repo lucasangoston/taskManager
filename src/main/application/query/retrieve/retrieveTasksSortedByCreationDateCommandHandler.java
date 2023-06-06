@@ -1,7 +1,7 @@
-package application.query.retrieve;
+package main.application.query.retrieve;
 
-import domain.model.Task;
-import kernel.query.QueryHandler;
+import main.domain.model.Task;
+import main.kernel.query.QueryHandler;
 
 import java.util.List;
 

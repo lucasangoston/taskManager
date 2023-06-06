@@ -1,4 +1,4 @@
-package domain.model;
+package main.domain.model;
 
 public enum State {
     TODO,

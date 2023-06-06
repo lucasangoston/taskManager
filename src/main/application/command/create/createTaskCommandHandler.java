@@ -1,6 +1,6 @@
-package application.command.create;
+package main.application.command.create;
 
-import kernel.command.CommandHandler;
+import main.kernel.command.CommandHandler;
 
 public class createTaskCommandHandler implements CommandHandler<createTask> {
     @Override

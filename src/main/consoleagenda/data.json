@@ -1,0 +1,59 @@
+[
+  {
+    "dateTime": "2022-02-15T22:14:30.486798+01:00",
+    "dueDate": "2022-02-16T14:14:30.535929+01:00",
+    "closeDate": null,
+    "description": "init a project to create an app for my tasks",
+    "state": "TODO",
+    "subTasks": [
+      {
+        "dateTime": "2022-02-15T22:14:30.535975+01:00",
+        "dueDate": null,
+        "closeDate": null,
+        "description": "init repo for the project",
+        "state": "TODO",
+        "subTasks": null
+      },
+      {
+        "dateTime": "2022-02-15T22:14:30.536022+01:00",
+        "dueDate": null,
+        "closeDate": null,
+        "description": "create solution and project",
+        "state": "TODO",
+        "subTasks": null
+      },
+      {
+        "dateTime": "2022-02-15T22:14:30.536022+01:00",
+        "dueDate": null,
+        "closeDate": null,
+        "description": "create a small poc to test formats",
+        "state": "TODO",
+        "subTasks": null
+      }
+    ]
+  },
+  {
+    "dateTime": "2022-02-13T22:14:30.536023+01:00",
+    "dueDate": "2022-02-16T21:14:30.536024+01:00",
+    "closeDate": null,
+    "description": "make a design of my needs to manage my tasks",
+    "state": "TODO",
+    "subTasks": null
+  },
+  {
+    "dateTime": "2022-02-16T22:14:30.536024+01:00",
+    "dueDate": "2022-03-16T22:14:30.536025+01:00",
+    "closeDate": null,
+    "description": "get first feedback on my app with peers",
+    "state": "TODO",
+    "subTasks": null
+  },
+  {
+    "dateTime": "2022-01-16T22:14:30.536143+01:00",
+    "dueDate": "2022-02-01T22:14:30.536144+01:00",
+    "closeDate": "2022-02-11T22:14:30.536144+01:00",
+    "description": "brainstorm on what project to work on",
+    "state": "TODO",
+    "subTasks": null
+  }
+]

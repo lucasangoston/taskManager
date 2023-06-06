@@ -1,6 +1,6 @@
-package application.command.update;
+package main.application.command.update;
 
-import kernel.command.CommandHandler;
+import main.kernel.command.CommandHandler;
 
 public class updateTaskCommandHandler implements CommandHandler<updateTask> {
     @Override
