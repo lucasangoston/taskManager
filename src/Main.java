@@ -1,32 +1,20 @@
-import main.application.command.create.CreateTask;
-import main.application.command.create.CreateTaskHandler;
-import main.application.command.delete.DeleteTask;
-import main.application.command.delete.DeleteTaskHandler;
 import main.application.command.update.UpdateTask;
 import main.application.command.update.UpdateTaskHandler;
-import main.application.query.retrieve.RetrieveTasksSortedByCreationDate;
-import main.application.query.retrieve.RetrieveTasksSortedByCreationDateHandler;
 import main.domain.model.State;
-import main.domain.model.Task;
-import main.infrastructure.CsvFileHandler;
 import main.infrastructure.JsonFileHandler;
 import main.kernel.FileHandler;
-import org.apache.commons.csv.CSVFormat;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        FileHandler fileHandler = new CsvFileHandler(CSVFormat.DEFAULT.withHeader("id", "dateTime", "dueDate", "closeDate", "description", "state", "subTasks"));
+        FileHandler fileHandler = new JsonFileHandler();
         UpdateTaskHandler updateTaskHandler = new UpdateTaskHandler(fileHandler);
-        DeleteTaskHandler deleteTaskHandler = new DeleteTaskHandler(fileHandler);
 
-        UUID id = UUID.fromString("5856d2da-0389-4c65-bb46-9be5f0288af7");
-        DeleteTask deleteTask = new DeleteTask(id);
+        UUID id = UUID.fromString("2782d7fe-712f-4b31-b9f9-9bd1106c9126");
+        UpdateTask updateTask = new UpdateTask(id, new Date(), new Date(), "updated", State.TODO);
 
-        deleteTaskHandler.handle(deleteTask);
+        updateTaskHandler.handle(updateTask);
     }
 }

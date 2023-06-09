@@ -99,14 +99,13 @@ public class Task {
 
     @Override
     public boolean equals(Object obj) {
-        System.out.println("Task.equals");
-        System.out.println("obj = " + obj.toString());
-        System.out.println("this = " + this);
         return obj instanceof Task && ((Task) obj).getId().equals(this.getId());
     }
 
     @Override
     public int hashCode() {
+        System.out.println("Task.hashCode");
+        System.out.println("this = " + this.getId().hashCode());
         return this.getId().hashCode();
     }
 }

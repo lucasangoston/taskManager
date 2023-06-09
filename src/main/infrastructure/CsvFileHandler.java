@@ -26,19 +26,17 @@ public class CsvFileHandler implements FileHandler {
 
     @Override
     public void deleteTask(UUID taskId) throws Exception {
-        Optional<Task> task = getTasks()
-                .stream()
-                .filter(t -> t.getId().equals(taskId))
-                .findFirst();
+        List<Task> tasks = getTasks();
 
-        if (task.isPresent()) {
-            getTasks().remove(task.get());
+        boolean removed = tasks.removeIf(task -> task.getId().equals(taskId));
 
-            refreshTasks(getTasks());
+        if (removed) {
+            refreshTasks(tasks);
+        } else {
+            throw new Exception("Task not found.");
         }
-
-        throw new Exception("Task not found.");
     }
+
 
     @Override
     public void addTasks(List<Task> tasks) {

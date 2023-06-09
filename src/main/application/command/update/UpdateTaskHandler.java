@@ -21,8 +21,6 @@ public class UpdateTaskHandler implements CommandHandler<UpdateTask> {
             Task taskUpdated = new Task(updateTask.id, getOldTask.get().getDateTime(), updateTask.dueDate, updateTask.closeDate, updateTask.description, updateTask.state, updateTask.subTasks);
 
             fileHandler.updateTask(taskUpdated);
-        }
-
-        throw new Exception("Task not found");
+        } else throw new Exception("Task not found");
     }
 }

@@ -35,7 +35,10 @@ public class JsonFileHandler implements FileHandler {
 
     @Override
     public Optional<Task> getTask(UUID taskId) {
-        return null;
+        return getTasks()
+                .stream()
+                .filter(task -> task.getId().equals(taskId))
+                .findFirst();
     }
 
     @Override
