@@ -1,31 +1,123 @@
 package main.infrastructure;
 
+import main.domain.model.State;
 import main.domain.model.Task;
-import org.apache.commons.csv.CSVParser;
+import main.kernel.FileHandler;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 
-import java.util.List;
-import java.util.UUID;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-public class CsvFileHandler implements FileHandler{
+public class CsvFileHandler implements FileHandler {
+    private final CSVFormat csvFormat;
+    private final DateFormat dateFormat;
 
-    private final CSVParser csvParser;
-
-    public CsvFileHandler(CSVParser csvParser) {
-        this.csvParser = csvParser;
+    public CsvFileHandler(CSVFormat csvFormat) {
+        this.csvFormat = csvFormat;
+        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     }
 
     @Override
-    public void deleteTasks(UUID taskId) {
+    public void deleteTask(UUID taskId) throws Exception {
+        Optional<Task> task = getTasks()
+                .stream()
+                .filter(t -> t.getId().equals(taskId))
+                .findFirst();
 
+        if (task.isPresent()) {
+            getTasks().remove(task.get());
+
+            refreshTasks(getTasks());
+        }
+
+        throw new Exception("Task not found.");
+    }
+
+    @Override
+    public void addTasks(List<Task> tasks) {
+        List<Task> taskList = getTasks();
+        taskList.addAll(tasks);
+        refreshTasks(taskList);
+    }
+
+    @Override
+    public void updateTask(Task task) throws Exception {
+        List<Task> existingTasks = getTasks();
+
+        int index = existingTasks.indexOf(task);
+        System.out.println(existingTasks);
+
+        if (index == -1) {
+            throw new Exception("Task not found.");
+        }
+
+        existingTasks.set(index, task);
+        refreshTasks(existingTasks);
     }
 
     @Override
     public List<Task> getTasks() {
-        return null;
+        List<Task> tasks = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("src/main/consoleagenda/data.csv"))) {
+            String line;
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+
+                UUID id = UUID.fromString(fields[0]);
+                Date dateTime = dateFormat.parse(fields[1]);
+                Date dueDate = dateFormat.parse(fields[2]);
+                Date closeDate = dateFormat.parse(fields[3]);
+                String description = fields[4];
+                State state = State.valueOf(fields[5]);
+
+                Task task = new Task(id, dateTime, dueDate, closeDate, description, state, new ArrayList<>());
+                tasks.add(task);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        return tasks;
     }
 
     @Override
-    public void saveTasks(List<Task> task) {
-
+    public Optional<Task> getTask(UUID taskId) {
+        return getTasks()
+                .stream()
+                .filter(task -> task.getId().equals(taskId))
+                .findFirst();
     }
+
+    @Override
+    public void refreshTasks(List<Task> tasks) {
+        try (CSVPrinter csvPrinter = new CSVPrinter(new FileWriter("src/main/consoleagenda/data.csv"), csvFormat)) {
+            for (Task task : tasks) {
+                csvPrinter.printRecord(
+                        task.getId(),
+                        dateFormat.format(task.getDateTime()),
+                        dateFormat.format(task.getDueDate()),
+                        dateFormat.format(task.getCloseDate()),
+                        task.getDescription(),
+                        task.getState(),
+                        task.getSubTasks()
+                );
+            }
+            csvPrinter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

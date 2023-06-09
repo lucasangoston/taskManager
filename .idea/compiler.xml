@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="taskManager" target="1.8" />
+      <module name="taskManager" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>
