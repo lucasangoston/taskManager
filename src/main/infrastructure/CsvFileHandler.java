@@ -19,10 +19,12 @@ import java.util.*;
 public class CsvFileHandler implements FileHandler {
     private final CSVFormat csvFormat;
     private final DateFormat dateFormat;
+    private final String filePath;
 
-    public CsvFileHandler(CSVFormat csvFormat) {
+    public CsvFileHandler(CSVFormat csvFormat,String filePath) {
         this.csvFormat = csvFormat;
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        this.filePath = filePath;
     }
 
     @Override
@@ -66,7 +68,7 @@ public class CsvFileHandler implements FileHandler {
     public List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader("src/main/consoleagenda/data.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             br.readLine();
 
@@ -102,7 +104,7 @@ public class CsvFileHandler implements FileHandler {
 
     @Override
     public void refreshTasks(List<Task> tasks) {
-        try (CSVPrinter csvPrinter = new CSVPrinter(new FileWriter("src/main/consoleagenda/data.csv"), csvFormat)) {
+        try (CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(filePath), csvFormat)) {
             for (Task task : tasks) {
                 csvPrinter.printRecord(
                         task.getId(),

@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.UUID;
 
 public class CreateTaskTest {
-    private final FileHandler fileHandler = new JsonFileHandler();
+    private final FileHandler fileHandler = new JsonFileHandler("test/consoleagendaTest/dataTest.json");
     CreateTaskHandler createTaskHandler = new CreateTaskHandler(fileHandler);
 
 

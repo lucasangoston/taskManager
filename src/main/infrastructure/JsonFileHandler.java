@@ -18,11 +18,12 @@ import java.util.UUID;
 
 public class JsonFileHandler implements FileHandler {
     private final ObjectMapper objectMapper;
-    static final String filePath = "/Users/lucasangoston/Downloads/taskManager/src/main/consoleagenda/data.json";
+    private final String filePath;
 
-    public JsonFileHandler() {
+    public JsonFileHandler(String filePath) {
         objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        this.filePath = filePath;
     }
 
     @Override

@@ -15,12 +15,13 @@ import java.util.Date;
 import java.util.UUID;
 
 public class GetTaskTest {
-    private final FileHandler fileHandler = new JsonFileHandler();
+    private final FileHandler fileHandler = new JsonFileHandler("test/consoleagendaTest/dataTest.json");
+    private final FileHandler fileHandlerEmpty = new JsonFileHandler("test/consoleagendaTest/dataJsonEmptyTest.json");
     private final UpdateTaskHandler updateTaskHandler = new UpdateTaskHandler(fileHandler);
 
     @Test
     public void should_get_task_by_id() throws TaskNotFoundException, EmptyFileException {
-        UUID id = UUID.fromString("f4883631-feea-4b60-99c9-29e4b3c917bc");
+        UUID id = UUID.fromString("32dba7cd-0dc6-4000-bd84-3daf85074631");
 
         boolean taskExists = fileHandler.getTask(id).isPresent();
 
@@ -29,10 +30,10 @@ public class GetTaskTest {
 
     @Test
     public void should_thrown_error_because_file_is_empty() {
-        UUID id = UUID.fromString("f4883631-feea-4b60-99c9-29e4b3c917bc");
+        UUID id = UUID.fromString("2782d7fe-712f-4b31-b9f9-9bd1106c");
 
         Assertions.assertThrows(TaskNotFoundException.class, () -> {
-            fileHandler.getTask(id);
+            fileHandlerEmpty.getTask(id);
         });
     }
 }

@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) throws IOException, EmptyFileException {
-        FileHandler fileHandler = new CsvFileHandler(CSVFormat.DEFAULT);
+        FileHandler fileHandler = new CsvFileHandler(CSVFormat.DEFAULT,"src/main/consoleagenda/data.csv");
         UpdateTaskHandler updateTaskHandler = new UpdateTaskHandler(fileHandler);
         DeleteTaskHandler deleteTaskHandler = new DeleteTaskHandler(fileHandler);
         RetrieveTasksSortedByCreationDateHandler retrieveTasksSortedByCreationDateHandler = new RetrieveTasksSortedByCreationDateHandler(fileHandler, fileHandler.getTasks());

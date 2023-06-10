@@ -13,12 +13,12 @@ import java.util.Date;
 import java.util.UUID;
 
 public class DeleteTaskTest {
-    private final FileHandler fileHandler = new JsonFileHandler();
+    private final FileHandler fileHandler = new JsonFileHandler("test/consoleagendaTest/dataTest.json");
     private final DeleteTaskHandler deleteTaskHandler = new DeleteTaskHandler(fileHandler);
 
     @Test
     public void should_failed_to_find_task_to_deleted() {
-        UUID id = UUID.fromString("2782d7fe-712f-4b31-b9f9-9bd1106c926");
+        UUID id = UUID.fromString("dbba1c03-f14c-48ed-aece-83f817aa69");
         DeleteTask deleteTask = new DeleteTask(id);
 
         Assertions.assertThrows(TaskNotFoundException.class, () -> {
