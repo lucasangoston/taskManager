@@ -30,7 +30,7 @@ public class CommandLineApp {
     public CommandLineApp(FileHandler fileHandler) {
         this.fileHandler = fileHandler;
         this.description = "";
-        this.dueDate = null;
+        this.dueDate = new Date();
         this.state = null;
     }
 
@@ -125,7 +125,10 @@ public class CommandLineApp {
 
     private void createTask() throws Exception {
         CreateTaskHandler createTaskHandler = new CreateTaskHandler(fileHandler);
-        CreateTask task = new CreateTask(this.dueDate, null, this.description, this.state);
+        if (this.state == null) {
+            this.state = State.TODO;
+        }
+        CreateTask task = new CreateTask(this.dueDate, new Date(), this.description, this.state);
         createTaskHandler.handle(task);
     }
 
@@ -135,7 +138,7 @@ public class CommandLineApp {
         }
         String taskId = commandArgs[2];
         UpdateTaskHandler updateTaskHandler = new UpdateTaskHandler(fileHandler);
-        UpdateTask task = new UpdateTask(UUID.fromString(taskId), this.dueDate, null, this.description, this.state);
+        UpdateTask task = new UpdateTask(UUID.fromString(taskId), this.dueDate, new Date(), this.description, this.state);
         updateTaskHandler.handle(task);
     }
 
