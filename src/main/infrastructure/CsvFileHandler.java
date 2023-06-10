@@ -3,6 +3,7 @@ package main.infrastructure;
 import main.domain.model.State;
 import main.domain.model.Task;
 import main.kernel.FileHandler;
+import main.kernel.exception.TaskNotFoundException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -25,16 +26,17 @@ public class CsvFileHandler implements FileHandler {
     }
 
     @Override
-    public void deleteTask(UUID taskId) throws Exception {
+    public boolean deleteTask(UUID taskId) throws Exception {
         List<Task> tasks = getTasks();
 
         boolean removed = tasks.removeIf(task -> task.getId().equals(taskId));
 
         if (removed) {
             refreshTasks(tasks);
-        } else {
-            throw new Exception("Task not found.");
+
         }
+
+        return removed;
     }
 
 
@@ -53,7 +55,7 @@ public class CsvFileHandler implements FileHandler {
         System.out.println(existingTasks);
 
         if (index == -1) {
-            throw new Exception("Task not found.");
+            throw new TaskNotFoundException("Task not found.");
         }
 
         existingTasks.set(index, task);

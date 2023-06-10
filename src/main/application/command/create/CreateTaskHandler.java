@@ -3,6 +3,8 @@ package main.application.command.create;
 import main.domain.model.Task;
 import main.kernel.FileHandler;
 import main.kernel.command.CommandHandler;
+import main.kernel.exception.EmptyFileException;
+import main.kernel.exception.SaveToFileException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,7 @@ public class CreateTaskHandler implements CommandHandler<CreateTask> {
     }
 
     @Override
-    public void handle(CreateTask createTask) {
+    public void handle(CreateTask createTask) throws SaveToFileException, EmptyFileException {
         Task task = new Task(createTask.id, createTask.dateTime, createTask.dueDate, createTask.closeDate, createTask.description, createTask.state, createTask.subTasks);
         List<Task> tasks = new ArrayList<>();
         tasks.add(task);

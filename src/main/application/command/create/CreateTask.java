@@ -27,4 +27,8 @@ public class CreateTask implements Command {
         this.state = state;
         this.subTasks = new ArrayList<>();
     }
+
+    public UUID getId() {
+        return id;
+    }
 }

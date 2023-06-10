@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import main.domain.model.Task;
 import main.kernel.FileHandler;
+import main.kernel.exception.EmptyFileException;
+import main.kernel.exception.SaveToFileException;
+import main.kernel.exception.TaskNotFoundException;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,10 +26,13 @@ public class JsonFileHandler implements FileHandler {
     }
 
     @Override
-    public List<Task> getTasks() {
+    public List<Task> getTasks() throws EmptyFileException {
         try {
-            return objectMapper.readValue(new File(filePath), new TypeReference<List<Task>>() {
-            });
+            File file = new File(filePath);
+            if (file.length() == 0) {
+                throw new EmptyFileException("File is empty");
+            }
+            return objectMapper.readValue(file, new TypeReference<>() {});
         } catch (IOException e) {
             e.printStackTrace();
             return Collections.emptyList();
@@ -34,38 +40,45 @@ public class JsonFileHandler implements FileHandler {
     }
 
     @Override
-    public Optional<Task> getTask(UUID taskId) {
-        return getTasks()
-                .stream()
-                .filter(task -> task.getId().equals(taskId))
-                .findFirst();
+    public Optional<Task> getTask(UUID taskId) throws TaskNotFoundException, EmptyFileException {
+        try {
+            List<Task> tasks = getTasks();
+            if (tasks.isEmpty()) {
+                throw new EmptyFileException("File is empty");
+            }
+            return tasks.stream()
+                    .filter(task -> task.getId().equals(taskId))
+                    .findFirst();
+        } catch (Exception e) {
+            throw new TaskNotFoundException("Task not found");
+        }
     }
 
+
     @Override
-    public void refreshTasks(List<Task> tasks) {
+    public void refreshTasks(List<Task> tasks) throws SaveToFileException {
         try {
             objectMapper.writeValue(new File(filePath), tasks);
         } catch (IOException e) {
-            System.err.println("Error saving tasks: " + e.getMessage());
+            throw new SaveToFileException("Error while saving to file.");
         }
     }
 
     @Override
-    public void deleteTask(UUID taskId) {
+    public boolean deleteTask(UUID taskId) throws SaveToFileException, EmptyFileException {
         List<Task> existingTasks = getTasks();
 
         boolean isRemoved = existingTasks.removeIf(task -> task.getId().equals(taskId));
-        if (!isRemoved) {
-            System.out.println("Task not found.");
-            return;
+
+        if (isRemoved) {
+            refreshTasks(existingTasks);
         }
 
-        refreshTasks(existingTasks);
-        System.out.println("Task deleted successfully.");
+        return isRemoved;
     }
 
     @Override
-    public void addTasks(List<Task> tasks) {
+    public void addTasks(List<Task> tasks) throws SaveToFileException, EmptyFileException {
         List<Task> existingTasks = getTasks();
         existingTasks.addAll(tasks);
         refreshTasks(existingTasks);
