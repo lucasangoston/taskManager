@@ -10,9 +10,7 @@ import main.application.query.retrieve.RetrieveTasksSortedByCreationDate;
 import main.application.query.retrieve.RetrieveTasksSortedByCreationDateHandler;
 import main.domain.model.State;
 import main.kernel.FileHandler;
-import main.kernel.exception.EmptyFileException;
 import main.kernel.exception.InvalidCommandLineException;
-import main.kernel.exception.SaveToFileException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,37 +22,42 @@ import java.util.regex.Pattern;
 
 public class CommandLineApp {
 
-    private String commandLine;
-    private String[] commandArgs;
     private FileHandler fileHandler;
     private String description;
     private Date dueDate;
     private State state;
 
-    public CommandLineApp(String command, FileHandler fileHandler) {
-        this.commandLine = command;
-        this.commandArgs = command.split(" ");
+    public CommandLineApp(FileHandler fileHandler) {
         this.fileHandler = fileHandler;
         this.description = "";
-        this.dueDate = new Date();
-        this.state = State.TODO;
+        this.dueDate = null;
+        this.state = null;
     }
 
-    public void run() throws Exception {
+    public void usage() {
+        System.out.println("Usage:");
+        System.out.println("\tagenda <create|update|remove|list>");
+        System.out.println("\tagenda <create> [-c:<description>] [-d:<yyyy-MM-dd>] [-s:<todo|pending|progress|done|cancelled|closed>]");
+        System.out.println("\tagenda update <id> -c:<description> [-d:<yyyy-MM-dd>] [-s:<todo|pending|progress|done|cancelled|closed>]");
+        System.out.println("\tagenda remove <id>");
+    }
+
+    public void run(String commandLine) throws Exception {
+        String[] commandArgs = commandLine.split(" ");
         if (!commandArgs[0].equals("agenda")) {
             throw new InvalidCommandLineException("Invalid command. Usage: agenda <create|update|remove|list>");
         }
         switch (commandArgs[1].toLowerCase()) {
             case "create":
-                updateTaskValues(this.commandLine);
+                updateTaskValues(commandLine);
                 createTask();
                 break;
             case "update":
-                updateTaskValues(this.commandLine);
-                updateTask();
+                updateTaskValues(commandLine);
+                updateTask(commandArgs);
                 break;
             case "remove":
-                removeTask();
+                removeTask(commandArgs);
                 break;
             case "list":
                 listTasks();
@@ -69,7 +72,7 @@ public class CommandLineApp {
         Matcher matcher = commandPattern.matcher(commandLine);
 
         if (!matcher.find()) {
-            throw new InvalidCommandLineException("Invalid command. Usage: agenda <create|update> -c <description> [-d:<dueDate>] [-s:<state>]");
+            throw new InvalidCommandLineException("Invalid command. Usage: agenda <create|update> -c:<description> [-d:<dueDate>] [-s:<state>]");
         }
 
         Pattern optionPattern = Pattern.compile("-([cds]):([^\\s\"]+|\"[^\"]+\")");
@@ -88,6 +91,7 @@ public class CommandLineApp {
             }
         }
     }
+
     private String extractOptionValue(String value) {
         if (value.startsWith("\"") && value.endsWith("\"")) {
             return value.substring(1, value.length() - 1);
@@ -99,6 +103,7 @@ public class CommandLineApp {
     private Date getDueDate(String dueDate) throws ParseException {
         return new SimpleDateFormat("yyyy-MM-dd").parse(dueDate);
     }
+
     private State getState(String state) {
         switch (state.toLowerCase()) {
             case "todo":
@@ -124,27 +129,21 @@ public class CommandLineApp {
         createTaskHandler.handle(task);
     }
 
-    private void updateTask() throws Exception {
+    private void updateTask(String[] commandArgs) throws Exception {
         if (commandArgs.length <= 3) {
-            throw new InvalidCommandLineException("Invalid command. Usage: agenda remove <taskId>");
+            throw new InvalidCommandLineException("Invalid command. Usage: agenda update <taskId> -c:<description> [-d:<dueDate>] [-s:<state>]");
         }
         String taskId = commandArgs[2];
-        if (!taskId.matches("\\d+")) {
-            throw new NumberFormatException("Invalid taskId. Please enter a valid number.");
-        }
         UpdateTaskHandler updateTaskHandler = new UpdateTaskHandler(fileHandler);
         UpdateTask task = new UpdateTask(UUID.fromString(taskId), this.dueDate, null, this.description, this.state);
         updateTaskHandler.handle(task);
     }
 
-    private void removeTask() throws Exception {
+    private void removeTask(String[] commandArgs) throws Exception {
         if (commandArgs.length != 3) {
             throw new InvalidCommandLineException("Invalid command. Usage: agenda remove <taskId>");
         }
         String taskId = commandArgs[2];
-        if (!taskId.matches("\\d+")) {
-            throw new NumberFormatException("Invalid taskId. Please enter a valid number.");
-        }
         DeleteTaskHandler deleteTaskHandler = new DeleteTaskHandler(fileHandler);
         deleteTaskHandler.handle(new DeleteTask(UUID.fromString(taskId)));
     }

@@ -21,15 +21,16 @@ import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+        FileHandler fileHandler = new CsvFileHandler(CSVFormat.DEFAULT,"src/main/consoleagenda/data.csv");
+        CommandLineApp commandLineApp = new CommandLineApp(fileHandler);
+        commandLineApp.usage();
+
         Scanner scanner = new Scanner(System.in);
         System.out.print("> ");
         String commandLine = scanner.nextLine();
         scanner.close();
 
-        FileHandler fileHandler = new CsvFileHandler(CSVFormat.DEFAULT,"src/main/consoleagenda/data.csv");
-        CommandLineApp commandLineApp = new CommandLineApp(commandLine, fileHandler);
-
-        commandLineApp.run();
+        commandLineApp.run(commandLine);
 
         UpdateTaskHandler updateTaskHandler = new UpdateTaskHandler(fileHandler);
         DeleteTaskHandler deleteTaskHandler = new DeleteTaskHandler(fileHandler);
